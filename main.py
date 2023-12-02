@@ -4,7 +4,7 @@ from functools import lru_cache
 from svgwrite import cm, mm
 import time
 
-with open('testcase.csv', newline='') as f:
+with open('to_lasercut2.csv', newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
 
@@ -71,12 +71,13 @@ class panel():
 
     # @lru_cache(maxsize=None)
     def can_place(self, rectangle):
-        for rect in self.rectangles:
-            if rect.overlap(rectangle):
-                return False
         top_right = rectangle.calc_topright()
         if top_right[0] > self.width or top_right[1] > self.height:
             return False
+        for rect in self.rectangles:
+            if rect.overlap(rectangle):
+                return False
+
         return True
 
 
@@ -95,7 +96,7 @@ while len(list_of_rectangles) > 0:
             current_rect.y_BL = point[1]
             if pan.can_place(current_rect):
                 pan.place(current_rect)
-                print('placed 1 rectangle')
+                #print('placed 1 rectangle')
                 rectangle_placed = True
                 break
         if rectangle_placed:
